@@ -111,3 +111,25 @@ export const getBookById = async (req, res) => {
         res.status(500).json({ error: error?.message })
     }
 }
+
+export const searchBooks = async (req, res) => {
+    try {
+        console.log(req.query)
+        const { title, author } = req.query;
+
+        let filter = {}
+        if (title) {
+            filter.title = new RegExp(title, 'i');
+        }
+        if (author) {
+            filter.author = new RegExp(author, 'i');
+        }
+
+        const books = await Book.find(filter)
+
+        res.status(200).json({ books })
+
+    } catch (error) {
+        res.status(500).json({ error: error?.message })
+    }
+}
