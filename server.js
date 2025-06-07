@@ -6,19 +6,15 @@ dotenv.config();
 
 console.log('Server starting')
 
-// const authRoutes = require('./routes/authRoutes');
-// const bookRoutes = require('./routes/bookRoutes');
-// const reviewRoutes = require('./routes/reviewRoutes');
-
 import authRoutes from './routes/authRoutes.js'
-// import bookRoutes from './routes/bookRoutes'
+import bookRoutes from './routes/bookRoutes.js'
 // import reviewRoutes from './routes/reviewRoutes'
 
 const app = express();
 app.use(express.json());
 
-app.use('/api', authRoutes);
-// app.use('/api', bookRoutes);
+app.use('/booksApi/auth', authRoutes);
+app.use('/booksApi', bookRoutes);
 // app.use('/api', reviewRoutes);
 
 mongoose.connect(process.env.MONGO_URI, {
