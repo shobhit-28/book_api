@@ -35,3 +35,54 @@ export const addReview = async (req, res) => {
         res.status(500).json({ error: error.message })
     }
 }
+
+export const updateReview = async (req, res) => {
+    try {
+        const reviewId = req.params.id;
+        const userId = req.user.id;
+
+        const {rating, comment} = req.body;
+
+        const review = await Review.findById(reviewId);
+
+        if (!review) {
+            return res.status(404).json({error: `Review not found`})
+        }
+
+        if (review.user.toString() !== userId) {
+            return res.status(403).json({error: `You are not authorised to update this review`})
+        }
+
+        if (rating) review.rating = rating
+        if (comment) review.comment = comment
+
+        review.save();
+
+        res.status(200).json(review)
+
+    } catch (error) {
+        res.status(500).json({error: error?.message})
+    }
+}
+
+export const deleteReview = async (req, res) => {
+    try {
+        const reviewId = req.params.id
+        const userId = req.user.id
+        const review = await Review.findById(reviewId)
+
+        if (!review) {
+            return res.status(404).json({error: `Review not found`})
+        }
+
+        if (review.user.toString() !== userId) {
+            return res.status(403).json({error: `You are not authorised to delete this review`})
+        }
+
+        await Review.findByIdAndDelete(reviewId);
+        res.status(200).json({message: `Review deleted`})
+
+    } catch (error) {
+        res.status(500).json({error: error?.message})
+    }
+}
